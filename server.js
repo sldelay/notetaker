@@ -21,7 +21,7 @@ app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "public", "notes.html"));
 });
 
-app.get("/api/notes", function (reg, res) {
+app.get("/api/notes", function (req, res) {
     let obj = JSON.parse(fs.readFileSync('db/db.json', 'utf8'));
     return res.json(obj);
 });
@@ -32,15 +32,15 @@ app.post("/api/notes", function (req, res) {
         if (err) {
             console.log(err);
         } else {
-            obj = JSON.parse(data);
+            let obj = JSON.parse(data);
             obj.push(note);
-            json = JSON.stringify(obj);
+            json = JSON.stringify(obj, null, 2);
             fs.writeFile('db/db.json', json, 'utf8', function (err, data) {
                 if (err) throw err;
             });
         }
     });
-    return res.json(note);
+    return res.sendStatus(201);
 });
 
 app.delete('/api/notes/:id', function (req, res) {
@@ -49,12 +49,12 @@ app.delete('/api/notes/:id', function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                obj = JSON.parse(data);
+                let obj = JSON.parse(data);
                 obj.forEach(el => {
                     if (el.id === noteID) {
                         let foundNote = obj.indexOf(el);
                         obj.splice(foundNote, 1)
-                        json = JSON.stringify(obj);
+                        json = JSON.stringify(obj, null, 2); 
                         fs.writeFile('db/db.json', json, 'utf8', function (err, data) {
                             if (err) throw err;
                         });
@@ -66,6 +66,6 @@ app.delete('/api/notes/:id', function (req, res) {
         });
     }
     processDelete(req.params.id)
-    return res.send("Successfully deleted!")
+    return res.sendStatus(200)
 });
 
