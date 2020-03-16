@@ -34,7 +34,7 @@ app.post("/api/notes", function (req, res) {
         } else {
             let obj = JSON.parse(data);
             obj.push(note);
-            json = JSON.stringify(obj, null, 2);
+            let json = JSON.stringify(obj, null, 2);
             fs.writeFile('db/db.json', json, 'utf8', function (err, data) {
                 if (err) throw err;
             });
@@ -54,7 +54,7 @@ app.delete('/api/notes/:id', function (req, res) {
                     if (el.id === noteID) {
                         let foundNote = obj.indexOf(el);
                         obj.splice(foundNote, 1)
-                        json = JSON.stringify(obj, null, 2); 
+                        let json = JSON.stringify(obj, null, 2); 
                         fs.writeFile('db/db.json', json, 'utf8', function (err, data) {
                             if (err) throw err;
                         });
